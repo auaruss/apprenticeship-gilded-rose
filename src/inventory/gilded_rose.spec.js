@@ -23,6 +23,10 @@ describe('`updateQuality`', () => {
     const agedBrieItem = new Item('Aged Brie', 2, 2);
     updateQuality([agedBrieItem]);
     expect(agedBrieItem.quality).toBe(3);
+
+    const negativeSellInAgedBrieItem = new Item('Aged Brie', -2, 33);
+    updateQuality([negativeSellInAgedBrieItem]);
+    expect(negativeSellInAgedBrieItem.quality).toBe(35);
   });
   
   it('allows the quality to be initialized above 50, but not increase above 50', () => {
