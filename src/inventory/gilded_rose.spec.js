@@ -69,4 +69,14 @@ describe('`updateQuality`', () => {
   it('always makes the quality of expired "Backstage passes to a TAFKAL80ETC concert" 0', () => {
     testItemUpdateEquals(new Item('Backstage passes to a TAFKAL80ETC concert', 0, 24), 'quality', 0);
   });
+
+  it('properly supports conjured items', () => {
+    testItemUpdateEquals(new Item('Conjured mana item', 4, 26), 'quality', 24);
+    
+    testItemUpdateEquals(new Item('the CoNjuRed mana item', 14, 22), 'quality', 20);
+    
+    testItemUpdateEquals(new Item('Sconjured mana item', -4, 44), 'quality', 40);
+    
+    testItemUpdateEquals(new Item('CONJURED_MANA_ITEM', 414, 32), 'quality', 30);
+  })
 });

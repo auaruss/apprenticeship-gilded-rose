@@ -66,5 +66,10 @@ export function updateQuality(items) {
         }
       }
     }
+
+    if (items[i].name.toLowerCase().includes('conjured')) {
+      if (items[i].sell_in < 0) items[i].quality--;
+      items[i].quality--;
+    }
   }
 }
