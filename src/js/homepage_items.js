@@ -35,10 +35,25 @@ const bindEventListenToUpdateButton = (items) => {
   });
 };
 
+const bindEventListenToResetButton = (items) => {
+  const updateButton = document.getElementById('reset-items-button');
+  updateButton.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const resetItems = getNewItems();
+    for (let i = 0; i < resetItems.length; i++)
+      items[i] = resetItems[i];
+
+    renderItemsOnHomepage(items);
+  });
+};
+
+
 const showItemsOnHomePage = () => {
   const items = getNewItems();
   renderItemsOnHomepage(items);
   bindEventListenToUpdateButton(items);
+  bindEventListenToResetButton(items);
 };
 
 showItemsOnHomePage();
