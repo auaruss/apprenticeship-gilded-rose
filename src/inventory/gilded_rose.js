@@ -37,11 +37,7 @@ export function updateQuality(items) {
         break;
     }
 
-    if (items[i].quality < 0)
-      items[i].quality = 0;
-    
-    if (items[i].name !== 'Sulfuras, Hand of Ragnaros') 
-      items[i].sell_in--;
+    guardItemQualityAndDeprecateSellIn(item);
   }
 }
 
@@ -75,4 +71,12 @@ function updateUnspecifiedItem(item) {
 function incrementQuality(item, incrementBy) {
   if (item.quality >= 50 && incrementBy > 0) return;
   item.quality += incrementBy;
+}
+
+function guardItemQualityAndDeprecateSellIn(item) {
+  if (item.quality < 0)
+    item.quality = 0;
+
+  if (item.name !== 'Sulfuras, Hand of Ragnaros') 
+    item.sell_in--;
 }
