@@ -58,7 +58,7 @@ const updateAgedBrie = (item) => {
 const updateUnspecifiedItem = (item) => {
 
   const normalOrConjuredModifier =
-    (item.name.toLowerCase().includes('conjured')) ? CONJURED_MODIFIER : NORMAL_MODIFIER;
+    (isConjuredItem(item)) ? CONJURED_MODIFIER : NORMAL_MODIFIER;
         
   const deprecation = (item.sell_in >= 0)
     ? normalOrConjuredModifier * NORMAL_ITEM_DEPRECATION
@@ -75,6 +75,10 @@ const incrementQuality = (item, incrementBy) => {
 const guardItemQuality = (item) => {
   if (item.quality < 0)
     item.quality = 0;
+}
+
+const isConjuredItem = (item) => {
+  return item.name.toLowerCase().includes('conjured');
 }
 
 const deprecateSellIn = (item) => {
