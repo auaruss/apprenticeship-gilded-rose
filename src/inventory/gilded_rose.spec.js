@@ -60,7 +60,7 @@ describe('`updateQuality`', () => {
 
   // When we update to sell_in being -1, the concert ticket must be worthless.
   it(
-    'incrases the quality by 2 per update when the sell_in of '
+    'incrases the quality by 3 per update when the sell_in of '
     + '"Backstage passes to a TAFKAL80ETC concert" is in the range (0-5]', () => {
     testItemUpdateEquals(new Item('Backstage passes to a TAFKAL80ETC concert', 2, 24), 'quality', 27);
     testItemUpdateEquals(new Item('Backstage passes to a TAFKAL80ETC concert', 1, 27), 'quality', 30);

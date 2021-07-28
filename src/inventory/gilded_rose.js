@@ -22,54 +22,57 @@ const items = [
 updateQuality(items);
 */
 export function updateQuality(items) {
-  for (var i = 0; i < items.length; i++) {
-    if (items[i].name != 'Aged Brie' && items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-      if (items[i].quality > 0) {
-        if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-          items[i].quality = items[i].quality - 1
-        }
-      }
-    } else {
-      if (items[i].quality < 50) {
-        items[i].quality = items[i].quality + 1
-        if (items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].sell_in < 11) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-          if (items[i].sell_in < 6) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-        }
-      }
-    }
-    if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-      items[i].sell_in = items[i].sell_in - 1;
-    }
-    if (items[i].sell_in < 0) {
-      if (items[i].name != 'Aged Brie') {
-        if (items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].quality > 0) {
-            if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-              items[i].quality = items[i].quality - 1
-            }
-          }
-        } else {
-          items[i].quality = items[i].quality - items[i].quality
-        }
-      } else {
-        if (items[i].quality < 50) {
-          items[i].quality = items[i].quality + 1
-        }
-      }
+  for (let i = 0; i < items.length; i++) {
+    switch(items[i].name) {
+      case 'Backstage passes to a TAFKAL80ETC concert':
+        updateBackstagePasses(items[i]);
+        break;
+      case 'Sulfuras, Hand of Ragnaros':
+        break;
+      case 'Aged Brie':
+        updateAgedBrie(items[i]);
+        break;
+      default:
+        updateUnspecifiedItem(items[i]);
+        break;
     }
 
-    if (items[i].name.toLowerCase().includes('conjured')) {
-      if (items[i].sell_in < 0) items[i].quality--;
-      items[i].quality--;
-    }
+    if (items[i].quality < 0)
+      items[i].quality = 0;
+    
+    if (items[i].name !== 'Sulfuras, Hand of Ragnaros') 
+      items[i].sell_in--;
   }
+}
+
+
+function updateBackstagePasses(item) {
+  if      (item.sell_in <= 0) item.quality = 0;
+  else if (item.sell_in < 6)  incrementQuality(item, 3);
+  else if (item.sell_in < 10) incrementQuality(item, 2);
+  else                        incrementQuality(item, 1);
+}
+
+function updateAgedBrie(item) {
+  (item.sell_in < 0) 
+  ? incrementQuality(item, 2)
+  : incrementQuality(item, 1);
+}
+
+function updateUnspecifiedItem(item) {
+  const NORMAL_ITEM_DEPRECATION = 1;
+
+  const normalOrConjuredModifier =
+    (item.name.toLowerCase().includes('conjured')) ? 2 : 1;
+        
+  const deprecation = (item.sell_in >= 0)
+    ? normalOrConjuredModifier * NORMAL_ITEM_DEPRECATION
+    : 2 * normalOrConjuredModifier * NORMAL_ITEM_DEPRECATION;
+
+  incrementQuality(item, -deprecation);
+}
+
+function incrementQuality(item, incrementBy) {
+  if (item.quality >= 50 && incrementBy > 0) return;
+  item.quality += incrementBy;
 }
