@@ -50,26 +50,18 @@ const updateBackstagePasses = (item) => {
 }
 
 const updateAgedBrie = (item) => {
-  (item.sell_in < 0) 
+  (item.sell_in < 0)
   ? incrementQuality(item, 2 * NORMAL_MODIFIER)
   : incrementQuality(item, NORMAL_MODIFIER);
 }
 
 const updateUnspecifiedItem = (item) => {
-
-  const normalOrConjuredModifier =
-    (isConjuredItem(item)) ? CONJURED_MODIFIER : NORMAL_MODIFIER;
-        
-  const deprecation = (item.sell_in >= 0)
-    ? normalOrConjuredModifier * NORMAL_ITEM_DEPRECATION
-    : 2 * normalOrConjuredModifier * NORMAL_ITEM_DEPRECATION;
-
-  incrementQuality(item, -deprecation);
+  incrementQuality(item, -calculateDeprecation(item, selectModifier(item)));
 }
 
 const incrementQuality = (item, incrementBy) => {
-  if (item.quality >= MAX_QUALITY_INCREASE && incrementBy > 0) return;
-  item.quality += incrementBy;
+  if (! itemQualityIsUnincrementable(item))
+    item.quality += incrementBy;
 }
 
 const guardItemQuality = (item) => {
@@ -77,11 +69,18 @@ const guardItemQuality = (item) => {
     item.quality = 0;
 }
 
-const isConjuredItem = (item) => {
-  return item.name.toLowerCase().includes('conjured');
-}
-
 const deprecateSellIn = (item) => {
-  if (item.name !== 'Sulfuras, Hand of Ragnaros') 
+  if (item.name !== 'Sulfuras, Hand of Ragnaros')
     item.sell_in--;
 }
+
+const calculateDeprecation = (item, modifier) =>
+  modifier * NORMAL_ITEM_DEPRECATION * (item.sell_in >= 0) ? 2 : 1;
+
+const selectModifier =
+  (item) => (isConjuredItem(item)) ? CONJURED_MODIFIER : NORMAL_MODIFIER;
+
+const isConjuredItem = (item) => item.name.toLowerCase().includes('conjured');
+
+const itemQualityIsUnincrementable =
+  (item) => item.quality >= MAX_QUALITY_INCREASE && incrementBy > 0;
